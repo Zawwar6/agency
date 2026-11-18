@@ -5,7 +5,6 @@ import { siteConfig } from '../../data/siteConfig'
 export function FinalCTA() {
   return (
     <section className="relative overflow-hidden bg-[#050505] py-28 md:py-36">
-      {/* Ambient lighting */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-40 top-1/2 h-[32rem] w-[32rem] -translate-y-1/2 rounded-full bg-[#2563EB]/25 blur-[130px]"
@@ -14,8 +13,6 @@ export function FinalCTA() {
         aria-hidden="true"
         className="pointer-events-none absolute -right-32 -top-20 h-80 w-80 rounded-full bg-[#1D4ED8]/20 blur-[100px]"
       />
-
-      {/* Subtle grid */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-[0.05]"
@@ -27,7 +24,6 @@ export function FinalCTA() {
           backgroundSize: '72px 72px',
         }}
       />
-
       <Container className="relative">
         <div className="flex flex-col items-start justify-between gap-10 md:flex-row md:items-center md:gap-16">
           {/* Text */}
@@ -45,8 +41,6 @@ export function FinalCTA() {
               We partner with ambitious teams to design and engineer digital products that stand out and scale.
             </p>
           </div>
-
-          {/* CTA */}
           <div className="shrink-0">
             <Button
               to={siteConfig.cta.to}
