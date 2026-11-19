@@ -1,6 +1,6 @@
 // Single source of truth for brand details. Replace placeholders when the client supplies them.
 export const siteConfig = {
-  name: 'Northbeam Studio',
+  name: 'Digital Fliper',
   tagline: 'Digital solutions designed to move your business forward.',
   domain: 'https://example.com',
   email: 'hello@example.com',
