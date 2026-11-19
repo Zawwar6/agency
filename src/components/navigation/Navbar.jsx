@@ -30,7 +30,13 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur">
       <Container className="flex h-16 items-center justify-between">
-        <Link to="/" className="font-display text-xl font-bold" onClick={close}>{siteConfig.name}</Link>
+      <Link to="/">   
+      <img
+        src="/DigitalFliper.png"
+        alt="Digital Fliper"
+        className="w-[170px] mt-5 h-auto object-contain"
+      /></Link>
+
 
         <nav aria-label="Main" className="hidden items-center gap-8 md:flex">
           {navigation.map((item) => (
