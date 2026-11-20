@@ -8,14 +8,14 @@ export default function PricingSection({ pricing, serviceTitle }) {
   const isCustom = pricing.pricingType === 'Custom Quote'
 
   return (
-    <section className="relative overflow-hidden bg-[#F8F8F9] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-black py-20 md:py-28">
       <Container>
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <p className="mb-4 text-[11px] font-semibold tracking-[0.22em] text-[#2563EB]">
             SIMPLE & TRANSPARENT PRICING
           </p>
 
-          <h2 className="font-display text-3xl font-bold tracking-tight text-[#050505] sm:text-4xl">
+          <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Invest in your next big idea.
           </h2>
 

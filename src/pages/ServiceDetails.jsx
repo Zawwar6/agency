@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { Seo } from '../components/common/Seo'
 import { Container } from '../components/common/Container'
 import { Button } from '../components/common/Button'
@@ -6,223 +7,382 @@ import { getServiceBySlug } from '../data/services'
 import NotFound from './NotFound'
 import PricingSection from '../components/services/PricingSection'
 
+/* ─────────────────────────────────────────────
+   Motion variants
+───────────────────────────────────────────── */
+const pageVariants = {
+  initial: { opacity: 0, y: 30 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+  },
+}
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 32 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+  },
+}
+
+const stagger = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.05 },
+  },
+}
+
+const cardVariant = {
+  hidden: { opacity: 0, y: 50, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
+  },
+}
+
+const listItem = {
+  hidden: { opacity: 0, x: -10 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.45, ease: 'easeOut' },
+  },
+}
+
+/* ─────────────────────────────────────────────
+   Sub components
+───────────────────────────────────────────── */
 function DetailCard({ title, items, index }) {
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[#050505]/[0.07] bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#2563EB]/25 hover:shadow-[0_25px_60px_-20px_rgba(37,99,235,0.18)]">
-      {/* top accent line */}
-      <div className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] transition-transform duration-500 group-hover:scale-x-100" />
+    <motion.div
+      variants={cardVariant}
+      whileHover={{ y: -10 }}
+      transition={{ type: 'spring', stiffness: 280, damping: 22 }}
+      className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-black/[0.05] bg-white p-9 shadow-[0_4px_24px_-8px_rgba(0,0,0,0.04)]"
+    >
+      {/* top accent */}
+      <div className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-700 transition-transform duration-700 ease-out group-hover:scale-x-100" />
 
-      <div className="mb-7 flex items-center gap-3.5">
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#2563EB]/[0.08] text-[13px] font-semibold tracking-wide text-[#2563EB]">
-          {String(index + 1).padStart(2, '0')}
-        </span>
-        <h2 className="font-display text-xl font-bold tracking-tight text-[#050505]">
-          {title}
-        </h2>
+      {/* glow */}
+      <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-blue-500/0 opacity-0 blur-3xl transition-all duration-700 group-hover:bg-blue-500/15 group-hover:opacity-100" />
+
+      <div className="relative mb-9 flex items-start justify-between">
+        <div>
+          <span className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-[13px] font-semibold tracking-wider text-blue-600 ring-1 ring-blue-100">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <h3 className="font-display text-[1.4rem] font-semibold tracking-tight text-neutral-900">
+            {title}
+          </h3>
+        </div>
       </div>
 
-      <ul className="flex flex-1 flex-col gap-3.5">
+      <motion.ul
+        variants={stagger}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-30px' }}
+        className="relative flex flex-1 flex-col gap-4"
+      >
         {items.map((item) => (
-          <li key={item} className="flex gap-3 text-[15px] leading-relaxed text-[#71717A]">
-            <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#2563EB]" />
+          <motion.li
+            key={item}
+            variants={listItem}
+            className="flex gap-3.5 text-[15px] leading-relaxed text-neutral-600"
+          >
+            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-600" />
             <span>{item}</span>
-          </li>
+          </motion.li>
         ))}
-      </ul>
-    </div>
+      </motion.ul>
+    </motion.div>
   )
 }
 
 function TechChip({ label }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-[#050505]/[0.08] bg-white px-3.5 py-1.5 text-sm font-medium text-[#050505] shadow-sm transition-colors hover:border-[#2563EB]/30 hover:text-[#2563EB]">
+    <motion.span
+      variants={fadeUp}
+      whileHover={{ y: -2, scale: 1.03 }}
+      className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-800 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50/50 hover:text-blue-700"
+    >
       {label}
-    </span>
+    </motion.span>
   )
 }
 
+/* ─────────────────────────────────────────────
+   Main Page
+───────────────────────────────────────────── */
 export default function ServiceDetails() {
   const { slug } = useParams()
   const service = getServiceBySlug(slug)
   if (!service) return <NotFound />
 
   return (
-    <>
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
       <Seo
         title={service.title}
         description={service.summary}
         path={`/services/${service.slug}`}
       />
 
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-white">
-        {/* ambient */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-48 -top-32 h-[36rem] w-[36rem] rounded-full bg-[#2563EB]/[0.07] blur-[130px]"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -left-32 top-40 h-72 w-72 rounded-full bg-[#1D4ED8]/[0.05] blur-[90px]"
-        />
+      {/* ══════════════════════════════════════
+          HERO
+      ══════════════════════════════════════ */}
+      <section className="relative min-h-[88vh] overflow-hidden bg-white">
+        {/* ambient lighting */}
+        <div className="pointer-events-none absolute -right-32 -top-40 h-[50rem] w-[50rem] rounded-full bg-blue-500/[0.07] blur-[160px]" />
+        <div className="pointer-events-none absolute -left-40 top-40 h-96 w-96 rounded-full bg-indigo-500/[0.05] blur-[120px]" />
+        <div className="pointer-events-none absolute bottom-0 left-1/2 h-80 w-[60rem] -translate-x-1/2 rounded-full bg-blue-400/[0.04] blur-[100px]" />
 
-        {/* subtle grid */}
+        {/* grid texture */}
         <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-[0.035]"
+          className="pointer-events-none absolute inset-0 opacity-[0.025]"
           style={{
             backgroundImage: `
-              linear-gradient(to right, #050505 1px, transparent 1px),
-              linear-gradient(to bottom, #050505 1px, transparent 1px)
+              linear-gradient(to right, #000 1px, transparent 1px),
+              linear-gradient(to bottom, #000 1px, transparent 1px)
             `,
-            backgroundSize: '64px 64px',
+            backgroundSize: '80px 80px',
           }}
         />
 
-        <Container className="relative pt-16 pb-20 md:pt-24 md:pb-28">
+        <Container className="relative flex min-h-[88vh] flex-col justify-center pt-28 pb-24">
           {/* breadcrumb */}
-          <nav className="mb-12 flex items-center gap-2 text-sm text-[#A1A1AA]">
-            <Link to="/" className="transition-colors hover:text-[#2563EB]">
+          <motion.nav
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            className="mb-16 flex items-center gap-2.5 text-sm text-neutral-400"
+          >
+            <Link to="/" className="transition-colors hover:text-blue-600">
               Home
             </Link>
-            <span className="text-[#050505]/25">/</span>
-            <Link to="/services" className="transition-colors hover:text-[#2563EB]">
+            <span className="text-neutral-300">/</span>
+            <Link to="/services" className="transition-colors hover:text-blue-600">
               Services
             </Link>
-            <span className="text-[#050505]/25">/</span>
-            <span className="font-medium text-[#050505]">{service.title}</span>
-          </nav>
+            <span className="text-neutral-300">/</span>
+            <span className="font-medium text-neutral-800">{service.title}</span>
+          </motion.nav>
 
-          <div className="max-w-3xl">
-            <p className="mb-6 flex items-center gap-3 text-[11px] font-medium tracking-[0.22em] text-[#A1A1AA]">
-              <span className="inline-block h-px w-8 bg-[#2563EB]" />
-              SERVICE DETAILS
-            </p>
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            animate="visible"
+            className="max-w-4xl"
+          >
+            <motion.div variants={fadeUp} className="mb-8 flex items-center gap-4">
+              <span className="h-px w-12 bg-gradient-to-r from-blue-600 to-transparent" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
+                Service Details
+              </span>
+            </motion.div>
 
-            <h1 className="font-display text-[2.75rem] font-bold leading-[1.05] tracking-tight text-[#050505] sm:text-5xl lg:text-6xl">
+            <motion.h1
+              variants={fadeUp}
+              className="font-display text-5xl font-semibold leading-[1.05] tracking-tight text-neutral-950 sm:text-6xl lg:text-7xl xl:text-[5.25rem]"
+            >
               {service.title}
-            </h1>
+            </motion.h1>
 
-            <p className="mt-7 max-w-2xl text-xl leading-relaxed text-[#71717A]">
+            <motion.p
+              variants={fadeUp}
+              className="mt-10 max-w-2xl text-xl leading-relaxed text-neutral-500 sm:text-[1.35rem]"
+            >
               {service.summary}
-            </p>
+            </motion.p>
 
-            <div className="mt-10">
+            <motion.div variants={fadeUp} className="mt-14 flex flex-wrap items-center gap-5">
               <Button
                 to="/contact"
-                className="!bg-[#2563EB] !px-7 !py-3.5 !text-white shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)] hover:!bg-[#1D4ED8]"
+                className="group relative !overflow-hidden !rounded-full !bg-neutral-950 !px-9 !py-4 !text-white transition-all duration-300 hover:!bg-blue-600"
               >
-                Discuss this service
+                <span className="relative z-10 font-medium">Discuss this service</span>
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
               </Button>
-            </div>
-          </div>
+
+              <Link
+                to="/services"
+                className="text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+              >
+                ← All services
+              </Link>
+            </motion.div>
+          </motion.div>
         </Container>
       </section>
 
-      {/* ── Three pillars ── */}
-      <section className="bg-[#F8F8F9] py-20 md:py-28">
+      {/* ══════════════════════════════════════
+          APPROACH
+      ══════════════════════════════════════ */}
+      <section className="relative bg-black py-28 md:py-36">
         <Container>
-          <div className="mb-14 max-w-2xl">
-            <h2 className="font-display text-3xl font-bold tracking-tight text-[#050505] sm:text-4xl">
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-100px' }}
+            className="mb-20 max-w-2xl"
+          >
+            <motion.p
+              variants={fadeUp}
+              className="mb-4 text-[11px] font-semibold uppercase tracking-[0.25em] text-white"
+            >
+              Approach
+            </motion.p>
+            <motion.h2
+              variants={fadeUp}
+              className="font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl"
+            >
               How we approach it
-            </h2>
-            <p className="mt-4 text-lg text-[#71717A]">
+            </motion.h2>
+            <motion.p
+              variants={fadeUp}
+              className="mt-6 text-lg leading-relaxed text-neutral-500"
+            >
               Clear outcomes, proven methods, and the right stack — every engagement is built around results.
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
-          <div className="grid gap-6 lg:grid-cols-3">
-            <DetailCard
-              title="Problems we solve"
-              items={service.problems}
-              index={0}
-            />
-            <DetailCard
-              title="What you get"
-              items={service.capabilities}
-              index={1}
-            />
-            <DetailCard
-              title="Technologies"
-              items={service.technologies}
-              index={2}
-            />
-          </div>
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-80px' }}
+            className="grid gap-6 lg:grid-cols-3"
+          >
+            <DetailCard title="Problems we solve" items={service.problems} index={0} />
+            <DetailCard title="What you get" items={service.capabilities} index={1} />
+            <DetailCard title="Technologies" items={service.technologies} index={2} />
+          </motion.div>
         </Container>
       </section>
 
-      {/* ── Technologies highlight (if available) ── */}
+      {/* ══════════════════════════════════════
+          TECH STACK
+      ══════════════════════════════════════ */}
       {service.technologies?.length > 0 && (
-        <section className="border-y border-[#050505]/[0.06] bg-white py-16 md:py-20">
+        <section className="border-y border-neutral-100 bg-white py-20 md:py-24">
           <Container>
-            <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p className="mb-2 text-[11px] font-medium tracking-[0.2em] text-[#A1A1AA]">
-                  TECH STACK
+            <div className="flex flex-col gap-12 md:flex-row md:items-end md:justify-between">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-neutral-400">
+                  Tech Stack
                 </p>
-                <h3 className="font-display text-2xl font-bold tracking-tight text-[#050505]">
-                  Tools we use for this service
+                <h3 className="font-display text-3xl font-semibold tracking-tight text-neutral-950">
+                  Tools we use
                 </h3>
-              </div>
-              <div className="flex flex-wrap gap-2.5">
+              </motion.div>
+
+              <motion.div
+                variants={stagger}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="flex flex-wrap gap-3"
+              >
                 {service.technologies.map((tech) => (
                   <TechChip key={tech} label={tech} />
                 ))}
-              </div>
+              </motion.div>
             </div>
           </Container>
         </section>
       )}
 
-     {/* ── Pricing Section ── */}
-    {service.pricing && (
-      <PricingSection
-        pricing={service.pricing}
-        serviceTitle={service.title}
-      />
-    )}
+      {/* ══════════════════════════════════════
+          PRICING
+      ══════════════════════════════════════ */}
+      {service.pricing && (
+        <PricingSection
+          pricing={service.pricing}
+          serviceTitle={service.title}
+        />
+      )}
 
-      {/* ── Final CTA ── */}
-      <section className="relative overflow-hidden bg-[#050505] py-24 md:py-32">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2563EB]/25 blur-[120px]"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute bottom-0 right-0 h-64 w-64 rounded-full bg-[#1D4ED8]/15 blur-[90px]"
-        />
+      {/* ══════════════════════════════════════
+          FINAL CTA
+      ══════════════════════════════════════ */}
+      <section className="relative overflow-hidden bg-neutral-950 py-32 md:py-40">
+        {/* soft glows */}
+        <div className="pointer-events-none absolute left-1/2 top-0 h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-600/25 blur-[140px]" />
+        <div className="pointer-events-none absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-indigo-600/20 blur-[120px]" />
 
         <Container className="relative">
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="mb-5 text-[11px] font-medium tracking-[0.22em] text-[#A1A1AA]">
-              NEXT STEP
-            </p>
-            <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-[2.75rem]">
-              Ready to talk about {service.title.toLowerCase()}?
-            </h2>
-            <p className="mx-auto mt-5 max-w-lg text-lg leading-relaxed text-[#A1A1AA]">
-              Share your goals and current challenges. We’ll respond with a clear point of view and recommended next steps.
-            </p>
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-100px' }}
+            className="mx-auto max-w-3xl text-center"
+          >
+            <motion.p
+              variants={fadeUp}
+              className="mb-6 text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500"
+            >
+              Next Step
+            </motion.p>
 
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <motion.h2
+              variants={fadeUp}
+              className="font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-[3.5rem]"
+            >
+              Ready to talk about<br className="hidden sm:block" />
+              {service.title.toLowerCase()}?
+            </motion.h2>
+
+            <motion.p
+              variants={fadeUp}
+              className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-neutral-400"
+            >
+              Share your goals and current challenges. We’ll respond with a clear point of view and recommended next steps.
+            </motion.p>
+
+            <motion.div
+              variants={fadeUp}
+              className="mt-14 flex flex-wrap items-center justify-center gap-4"
+            >
               <Button
                 to="/contact"
-                className="!bg-[#2563EB] !px-8 !py-3.5 !text-base !font-medium !text-white shadow-[0_0_50px_-10px_rgba(37,99,235,0.6)] transition-all hover:!bg-[#1D4ED8] hover:shadow-[0_0_60px_-8px_rgba(37,99,235,0.75)]"
+                className="group relative !overflow-hidden !rounded-full !bg-white !px-10 !py-4 !text-neutral-950 transition-all duration-300 hover:!bg-blue-500 hover:!text-white"
               >
-                Start a conversation
+                <span className="relative z-10 font-medium">Start a conversation</span>
               </Button>
+
               <Button
                 to="/services"
                 variant="outline"
-                className="!border-white/20 !px-6 !py-3.5 !text-white hover:!border-white/45 hover:!bg-white/5"
+                className="!rounded-full !border-white/20 !px-8 !py-4 !text-white hover:!border-white/40 hover:!bg-white/5"
               >
                 View all services
               </Button>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </Container>
       </section>
-    </>
+    </motion.div>
   )
 }
