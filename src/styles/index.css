@@ -6,6 +6,61 @@
   body { @apply bg-white font-sans text-ink antialiased; overflow-x: hidden; }
 }
 
+html.dark {
+  color-scheme: dark;
+  --theme-surface: #0b1020;
+  --theme-raised: #111827;
+  --theme-text: #f8fafc;
+  --theme-muted: #a1a1aa;
+  --theme-border: #263244;
+  --theme-tint: #172033;
+}
+
+html.dark body {
+  background-color: var(--theme-surface);
+  color: var(--theme-text);
+}
+
+html.dark .bg-white,
+html.dark [class~="bg-white/90"] {
+  background-color: var(--theme-raised) !important;
+}
+
+html.dark .bg-tint {
+  background-color: var(--theme-tint);
+}
+
+html.dark .text-black,
+html.dark .text-ink,
+html.dark .text-neutral-950,
+html.dark .text-neutral-900,
+html.dark .text-neutral-800,
+html.dark .text-neutral-700,
+html.dark [class*="text-[#050505]"] {
+  color: var(--theme-text) !important;
+}
+
+html.dark .text-muted,
+html.dark .text-neutral-600,
+html.dark .text-neutral-500,
+html.dark .text-neutral-400,
+html.dark [class~="text-[#A1A1AA]"],
+html.dark [class~="text-[#71717A]"],
+html.dark [class~="text-[#52525B]"] {
+  color: var(--theme-muted);
+}
+
+html.dark .border-line,
+html.dark .border-neutral-100,
+html.dark .border-neutral-200,
+html.dark [class*="border-[#050505]"] {
+  border-color: var(--theme-border) !important;
+}
+
+html.dark .navbar-brand {
+  background-color: #fff;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
